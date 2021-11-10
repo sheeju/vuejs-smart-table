@@ -127,6 +127,52 @@ export default {
 
 <Sorting/>
 
+### Multi Column Custom Sort <Badge text="Property"/> <Badge text="customSort: Function"/>
+
+In some cases you need to sort the data using multiple attribute of the data structure, 
+for instance if you need to sort the column using more than one attributes.
+
+For this you need to use `key` and `custom` propert to provide custom sorting function.
+
+The function will receive the 2 rows being compared and a third parameter with the sort order 
+where `1` represents ascending and `-1` represents descending.
+The function needs to return `1` if the first row is greater, `-1` if the second row is greater 
+or `0` if they are the same.
+
+```html
+<thead slot="head">
+    <v-th sortKey="customOrder" :customSort="customMultiSort">Registered</v-th>
+</thead>
+```
+
+`sortKey="customOrder"` is mandatory to make sure we use this to make sure sortOrder is handled within custom Function.
+
+```js
+methods: {
+  customMultiSort(a, b, sortOrder) {
+    // firstSort - asc
+    let aFirstVal = a.isActive;
+    let bFirstVal = b.isActive;
+
+    //For boolean
+    let firstSorted = (aFirstVal === bFirstVal)? 0 : aFirstVal? 1 : -1;
+    //For String
+    // let firstSorted = aFirstVal.localeCompare(bFirstVal);
+
+    // secondSort - asc/desc
+    let aSecondVal = new Date(a.registered).getTime();
+    let bSecondVal = new Date(b.registered).getTime();
+
+    let secondSorted = (aSecondVal - bSecondVal) * sortOrder;
+    console.log(sortOrder, firstSorted, secondSorted);
+
+    return firstSorted || secondSorted;
+  }
+}
+```
+
+<SortingMulti/>
+
 ## CSS icons
 By default we include three SVG icons to indicate the sorting state of a column. 
 But you can use CSS Styles to change the sort icons.

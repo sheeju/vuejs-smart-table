@@ -3,7 +3,11 @@ export function doSort (toSort, sortKey, customSort, sortOrder) {
 
   return local.sort((a, b) => {
     if (typeof customSort === 'function') {
-      return customSort(a, b) * sortOrder
+      if (/customOrder/i.test(sortKey)) {
+        return customSort(a, b, sortOrder)
+      } else {
+        return customSort(a, b) * sortOrder
+      }
     }
 
     let val1
